@@ -155,7 +155,6 @@ const Navbar = () => {
         </div>
 
         <Link
-          to=""
           className="navbar-logo"
           aria-label="Ledo Lab, ir al inicio"
           onClick={scrollToTop}
