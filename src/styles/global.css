@@ -1,0 +1,61 @@
+@import './variables.css';
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-family);
+  background-color: var(--color-bg-light);
+  color: var(--color-text-dark);
+  overflow-x: hidden;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+  border-radius: 6px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-primary);
+  border-radius: 6px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-secondary);
+}
+
+html,
+body,
+a,
+button,
+input,
+textarea,
+select,
+[role="button"] {
+  cursor: url('/assets/cursor.svg'), auto;
+}
+
+a:hover,
+button:hover,
+input:hover,
+textarea:hover,
+select:hover,
+[role="button"]:hover {
+  cursor: url('/assets/cursor-hover.svg'), auto;
+}
+
+body.cursor-click,
+body.cursor-click * {
+  cursor: url('/assets/cursor-click.svg'), auto !important;
+}

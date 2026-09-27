@@ -1,0 +1,40 @@
+/*
+  IMPORTANT: <ShapeDivider /> must be rendered as the LAST child *inside* the
+  section it decorates (the section needs `position: relative`), not as a
+  sibling between two sections. It positions itself against that section's
+  own edge, so the wave sits on top of the section's background and "bites"
+  into it — that's what makes it look like a cut instead of a flat seam.
+*/
+.shape-divider {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  height: clamp(48px, 8vw, 100px);
+  z-index: 5;
+  overflow: visible;
+  pointer-events: none;
+  line-height: 0;
+}
+
+.shape-divider--bottom {
+  bottom: -1px; /* 1px past the edge, kills the hairline seam some browsers render */
+}
+
+.shape-divider--top {
+  top: -1px;
+  transform: rotate(180deg);
+}
+
+.shape-divider svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.shape-flipped {
+  transform: scaleX(-1);
+}
+
+.shape-divider--top.shape-flipped {
+  transform: rotate(180deg) scaleX(-1);
+}

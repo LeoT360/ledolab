@@ -1,0 +1,20 @@
+:root {
+  /* Paleta de Ledo Lab */
+  --color-primary: #FFA41B;
+  --color-secondary: #F86F03;
+  --color-accent: #4F7FFF;
+  --color-bg-light: #FFF6F4;
+  --color-bg-dark: #123444;
+  --color-text-dark: #123444;
+  --color-text-light: #FFF6F4;
+  --color-text-muted: #53656b;
+
+  /* Estilos de Marca */
+  --font-body: 'DM Sans', sans-serif;
+  --font-display: 'Space Grotesk', sans-serif;
+  --font-family: var(--font-body);
+  --border-radius-sm: 8px;
+  --border-radius-md: 16px;
+  --border-radius-lg: 24px;
+  --border-radius-pill: 999px;
+}
