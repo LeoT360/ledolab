@@ -1,38 +1,36 @@
 import { Link } from 'react-router-dom';
 import './Button.css';
 
-const Button = ({ 
-  children, 
-  to, 
-  variant = 'primary', // 'primary' | 'secondary' | 'outline'
-  type = 'button',
-  onClick,
-  className = '' 
-}) => {
-  const buttonContent = <span>{children}</span>;
+/**
+ * Botón / enlace unificado.
+ * - href: enlace externo (se abre en otra pestaña)
+ * - to: ruta interna, o ancla si empieza con "#"
+ * - variant: 'primary' | 'dark' | 'light' | 'outline' | 'outline-light'
+ * - arrow: agrega una flecha de texto al final
+ */
+const Button = ({ children, to, href, variant = 'primary', arrow = false, className = '', ...rest }) => {
+  const classes = `btn btn--${variant} ${className}`.trim();
+  const content = (
+    <>
+      {children}
+      {arrow && <span aria-hidden="true">→</span>}
+    </>
+  );
 
-  const combinedClasses = `btn-ledo btn-${variant} ${className}`;
-
-  if (to) {
-    if (to.startsWith('#')) {
-      return (
-        <a href={to} className={combinedClasses} onClick={onClick}>
-          {buttonContent}
-        </a>
-      );
-    }
+  if (href) {
     return (
-      <Link to={to} className={combinedClasses} onClick={onClick}>
-        {buttonContent}
-      </Link>
+      <a href={href} className={classes} target="_blank" rel="noopener noreferrer" {...rest}>
+        {content}
+      </a>
     );
   }
-
-  return (
-    <button type={type} className={combinedClasses} onClick={onClick}>
-      {buttonContent}
-    </button>
-  );
+  if (to?.startsWith('#')) {
+    return <a href={to} className={classes} {...rest}>{content}</a>;
+  }
+  if (to) {
+    return <Link to={to} className={classes} {...rest}>{content}</Link>;
+  }
+  return <button type="button" className={classes} {...rest}>{content}</button>;
 };
 
 export default Button;

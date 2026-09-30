@@ -1,5 +1,3 @@
-@import './variables.css';
-
 * {
   box-sizing: border-box;
   margin: 0;
@@ -42,6 +40,7 @@ button,
 input,
 textarea,
 select,
+::-webkit-scrollbar-thumb,
 [role="button"] {
   cursor: url('/assets/cursor.svg'), auto;
 }
@@ -51,6 +50,8 @@ button:hover,
 input:hover,
 textarea:hover,
 select:hover,
+summary:hover,
+::-webkit-scrollbar-thumb:hover,
 [role="button"]:hover {
   cursor: url('/assets/cursor-hover.svg'), auto;
 }
@@ -58,4 +59,27 @@ select:hover,
 body.cursor-click,
 body.cursor-click * {
   cursor: url('/assets/cursor-click.svg'), auto !important;
+}
+
+:focus-visible {
+  outline: 3px solid var(--color-accent);
+  outline-offset: 3px;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { transition: none !important; animation: none !important; }
+}
+
+section[id] {
+  scroll-margin-top: 76px;
 }

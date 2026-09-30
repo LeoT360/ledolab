@@ -1,349 +1,126 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import Button from '../../components/Button/Button';
 import ShapeDivider from '../../components/ShapeDivider/ShapeDivider';
-import CursorMark from '../../components/CursorMark/CursorMark';
+import { Section, SectionHeading } from '../../components/Section/Section';
+import { siteConfig, whatsappLink } from '../../config/site';
 import './Home.css';
+import { usePageMeta } from '../../hooks/usePageMeta';
 
-const projects = [
-  {
-    number: '01',
-    category: 'VIDEO',
-    title: 'Movimiento que comunica.',
-    description:
-      'Edición, ritmo y postproducción para convertir contenido en una experiencia visual.',
-    href: '/edicion',
-    tone: 'orange',
-    asset: '/assets/title-outline-ledolab.svg',
-  },
-  {
-    number: '02',
-    category: 'DESIGN',
-    title: 'Ideas que toman forma.',
-    description:
-      'Diseño gráfico y piezas visuales pensadas para hacer que una marca se note.',
-    href: '/edicion',
-    tone: 'blue',
-    asset: '/assets/icon-outline-ledolab.svg',
-  },
-  {
-    number: '03',
-    category: 'WEB',
-    title: 'Ideas que cobran vida.',
-    description:
-      'Diseño y desarrollo web para convertir una idea en una experiencia digital.',
-    href: '/web',
-    tone: 'dark',
-    asset: '/assets/title-2-ledolab.svg',
-  },
+const services = [
+  { title: 'Edición de video', description: 'Videos promocionales y para redes sociales.', to: '/edicion', tone: 'light' },
+  { title: 'Diseño publicitario', description: 'Flyers y publicaciones para promocionar tu negocio.', to: '/edicion', tone: 'blue' },
+  { title: 'Páginas web', description: 'Landing pages y sitios para que te encuentren en internet.', to: '/web', tone: 'dark' },
 ];
 
-const Home = () => {
+/** Tarjeta de contacto: al hacer clic o tocar, lanza una onda desde el punto de contacto. */
+const ContactCard = () => {
   const [ripples, setRipples] = useState([]);
 
   const spawnRipple = (rect, clientX, clientY) => {
     const id = Date.now() + Math.random();
-    const ripple = {
-      id,
-      x: clientX - rect.left,
-      y: clientY - rect.top,
-    };
-
-    setRipples((prev) => [...prev, ripple]);
-
-    setTimeout(() => {
-      setRipples((prev) => prev.filter((r) => r.id !== id));
-    }, 700);
-  };
-
-  const handleContactClick = (e) => {
-    const rect = e.currentTarget.getBoundingClientRect();
-    spawnRipple(rect, e.clientX, e.clientY);
-  };
-
-  const handleContactTouch = (e) => {
-    const rect = e.currentTarget.getBoundingClientRect();
-    const touch = e.touches[0];
-
-    if (touch) {
-      spawnRipple(rect, touch.clientX, touch.clientY);
-    }
+    setRipples((prev) => [...prev, { id, x: clientX - rect.left, y: clientY - rect.top }]);
+    setTimeout(() => setRipples((prev) => prev.filter((r) => r.id !== id)), 700);
   };
 
   return (
-    <div className="home-page">
-      <section className="hero-section">
-        <div className="hero-background-shape" />
+    <a
+      href={whatsappLink()}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="contact-card"
+      onClick={(e) => spawnRipple(e.currentTarget.getBoundingClientRect(), e.clientX, e.clientY)}
+      onTouchStart={(e) => {
+        const touch = e.touches[0];
+        if (touch) spawnRipple(e.currentTarget.getBoundingClientRect(), touch.clientX, touch.clientY);
+      }}
+    >
+      <span className="contact-card__ripples" aria-hidden="true">
+        {ripples.map((r) => (
+          <span key={r.id} className="contact-card__ripple" style={{ left: r.x, top: r.y }} />
+        ))}
+      </span>
 
-        <div className="hero-meta">
-          <span>CREATIVE STUDIO</span>
-        </div>
-
-        <div className="hero-main">
-          <div className="hero-brand">
-            <span className="hero-intro">BIENVENIDO A</span>
-
-            <img
-              src="/assets/title-outline-2-ledolab.svg"
-              alt="Ledo Lab"
-              className="hero-title-logo"
-            />
-          </div>
-
-          <div className="hero-decoration hero-decoration-one">
-            <img
-              src="/assets/icon-outline-ledolab.svg"
-              alt=""
-              aria-hidden="true"
-            />
-          </div>
-
-          <div className="hero-decoration hero-decoration-two">
-            <img
-              src="/assets/cursor-ledolab.svg"
-              alt=""
-              aria-hidden="true"
-            />
-          </div>
-
-          <div className="hero-sticker">
-            <span>CLICK</span>
-            <strong>
-              <CursorMark size={20} />
-            </strong>
-          </div>
-        </div>
-
-        <ShapeDivider
-          type="soft"
-          fillColor="var(--color-bg-dark)"
-        />
-      </section>
-
-      <section className="about-section" id="about">
-        <div className="content-width">
-          <div className="about-layout">
-            <div className="about-heading">
-              <p className="section-kicker">¿QUÉ ES LEDO LAB?</p>
-
-              <h2>
-                Un lugar para
-                <span> experimentar.</span>
-              </h2>
-            </div>
-
-            <div className="about-copy">
-              <p>
-                Ledo Lab es un estudio creativo independiente donde diseño,
-                edición y desarrollo web se encuentran para transformar ideas
-                en algo que pueda verse, sentirse y recordarse.
-              </p>
-
-              <p>
-                No queremos hacer siempre lo mismo. El laboratorio cambia,
-                prueba, aprende y evoluciona con cada proyecto.
-              </p>
-
-              <div className="about-mark">
-                <img
-                  src="/assets/icon-line-ledolab.svg"
-                  alt=""
-                  aria-hidden="true"
-                />
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <ShapeDivider
-          type="wave"
-          fillColor="var(--color-primary)"
-          flip
-        />
-      </section>
-
-      <section className="projects-section" id="projects">
-        <div className="content-width">
-          <div className="projects-header">
-            <div>
-              <p className="section-kicker">PROYECTOS</p>
-
-              <h2>
-                Tres formas de
-                <span> crear.</span>
-              </h2>
-            </div>
-
-            <p>
-              Cada disciplina tiene su propio lenguaje. Aquí se mezclan para
-              encontrar nuevas formas de comunicar.
-            </p>
-          </div>
-
-          <div className="projects-grid">
-            {projects.map((project) => (
-              <Link
-                key={project.number}
-                to={project.href}
-                className={`project-card project-${project.tone}`}
-              >
-                <div className="project-card-top">
-                  <span>{project.number}</span>
-                  <span>{project.category}</span>
-                </div>
-
-                <div className="project-art">
-                  <div className="art-grid" />
-
-                  <img
-                    src={project.asset}
-                    alt=""
-                    aria-hidden="true"
-                    className="project-placeholder"
-                  />
-                </div>
-
-                <div className="project-content">
-                  <h3>{project.title}</h3>
-                  <p>{project.description}</p>
-                </div>
-
-                <div className="project-link">
-                  <span>EXPLORAR</span>
-                  <strong>
-                    <CursorMark size={17} />
-                  </strong>
-                </div>
-              </Link>
-            ))}
-          </div>
-        </div>
-
-        <ShapeDivider
-          type="arch"
-          fillColor="var(--color-secondary)"
-        />
-      </section>
-
-      <section className="services-section" id="services">
-        <div className="content-width">
-          <div className="services-heading">
-            <p className="section-kicker">SERVICIOS</p>
-
-            <h2>
-              Elige una opción.
-              <span> ¿Qué quieres crear?</span>
-            </h2>
-          </div>
-
-          <div className="services-list">
-            <Link to="/edicion" className="service-item">
-              <span className="service-number">01</span>
-
-              <div className="service-icon service-icon-orange">
-                <span>▶</span>
-              </div>
-
-              <div className="service-text">
-                <h3>Edición</h3>
-                <p>VIDEO · MOTION · RETOUCHING</p>
-              </div>
-
-              <span className="service-arrow">
-                <CursorMark size={18} />
-              </span>
-            </Link>
-
-            <Link to="/edicion" className="service-item">
-              <span className="service-number">02</span>
-
-              <div className="service-icon service-icon-blue">
-                <span>✦</span>
-              </div>
-
-              <div className="service-text">
-                <h3>Diseño</h3>
-                <p>VISUAL · CONTENT · GRAPHICS</p>
-              </div>
-
-              <span className="service-arrow">
-                <CursorMark size={18} />
-              </span>
-            </Link>
-
-            <Link to="/web" className="service-item">
-              <span className="service-number">03</span>
-
-              <div className="service-icon service-icon-dark">
-                <span>&lt;/&gt;</span>
-              </div>
-
-              <div className="service-text">
-                <h3>Web</h3>
-                <p>UI · UX · DEVELOPMENT</p>
-              </div>
-
-              <span className="service-arrow">
-                <CursorMark size={18} />
-              </span>
-            </Link>
-          </div>
-        </div>
-
-        <ShapeDivider
-          type="curve"
-          fillColor="var(--color-bg-light)"
-        />
-      </section>
-
-      <section className="contact-section" id="contact">
-        <div className="content-width">
-          <div className="contact-layout">
-            <div className="contact-copy">
-              <p className="section-kicker">HABLEMOS</p>
-
-              <h2>
-                ¿Qué vamos
-                <span> a crear?</span>
-              </h2>
-
-              <p className="contact-lead">
-                Cuéntame en qué estás trabajando 'un video, unas piezas
-                gráficas o una web' y veamos cómo convertirlo en tu clic
-                asegurado.
-              </p>
-            </div>
-
-            <a
-              href="mailto:hola@ledolab.com"
-              className="contact-card"
-              onClick={handleContactClick}
-              onTouchStart={handleContactTouch}
-            >
-              <span className="contact-card-ripples" aria-hidden="true">
-                {ripples.map((r) => (
-                  <span
-                    key={r.id}
-                    className="contact-ripple"
-                    style={{ left: r.x, top: r.y }}
-                  />
-                ))}
-              </span>
-
-              <img
-                src="/assets/cursor-ledolab.svg"
-                alt=""
-                aria-hidden="true"
-                className="contact-cursor"
-              />
-
-              <span className="contact-card-label">Escríbeme directo</span>
-              <span className="contact-card-email">hola@ledolab.com</span>
-            </a>
-          </div>
-        </div>
-      </section>
-    </div>
+      <span className="contact-card__label">Escríbeme por WhatsApp</span>
+      <span className="contact-card__number">
+        {siteConfig.whatsappDisplay} <span aria-hidden="true">→</span>
+      </span>
+    </a>
   );
+};
+
+const Home = () => {
+  usePageMeta(
+    'Ledo Lab | Ideas que merecen un clic',
+    'Edito videos, diseño piezas publicitarias y desarrollo páginas web para negocios. Ledo Lab, ideas que merecen un clic.'
+  );
+
+  return (
+  <div className="home-page">
+    {/* ===== HERO · Inicio =====
+        Este bloque es solo de esta página: cambia el texto aquí y sus estilos en Home.css (.home-hero). */}
+    <section className="home-hero">
+      <div className="home-hero__content content-width">
+        <h1 className="home-hero__logo">
+          <img src="/assets/title-2-ledolab.svg" alt="Ledo Lab" />
+        </h1>
+        <p className="home-hero__tagline">Ideas que merecen un clic.</p>
+        <p className="home-hero__text">
+          Edito videos, diseño piezas publicitarias y desarrollo páginas web para que tu negocio se vea y se recuerde.
+        </p>
+        <div className="home-hero__actions">
+          <Button href={whatsappLink()} arrow>Escríbeme por WhatsApp</Button>
+          <Button to="#services" variant="outline">Ver servicios</Button>
+        </div>
+
+        {/* Aquí puedes agregar figuras o imágenes decorativas (ubícalas con position: absolute en Home.css) */}
+      </div>
+      <ShapeDivider type="soft" fillColor="var(--color-bg-dark)" />
+    </section>
+
+    <Section tone="dark" id="about" divider={{ type: 'wave', next: 'primary' }}>
+      <div className="about">
+        <SectionHeading title="Un estudio creativo" highlight="de una sola persona." />
+        <div className="about__copy">
+          <p>
+            Ledo Lab es mi estudio. Edito los videos, diseño las piezas y programo las páginas yo mismo, así que
+            hablas directamente conmigo desde la primera idea hasta la entrega.
+          </p>
+          <p>Puedes contratar un servicio por separado o combinarlos para que tu marca se vea igual en todas partes.</p>
+        </div>
+      </div>
+    </Section>
+
+    <Section tone="primary" id="services" divider={{ type: 'curve', next: 'light' }}>
+      <SectionHeading title="¿Qué necesita" highlight="tu negocio?" />
+      <div className="link-cards">
+        {services.map((service) => (
+          <Link key={service.title} to={service.to} className={`link-card link-card--${service.tone}`}>
+            <div>
+              <h3>{service.title}</h3>
+              <p>{service.description}</p>
+            </div>
+            <span className="link-card__cta">
+              Ver servicios <span aria-hidden="true">→</span>
+            </span>
+          </Link>
+        ))}
+      </div>
+    </Section>
+
+    <Section tone="light" id="contact">
+      <div className="contact">
+        <div>
+          <SectionHeading title="¿Qué vamos" highlight="a crear?" />
+          <p className="contact__lead">
+            Cuéntame qué necesitas —un video, una pieza gráfica o una web— y te respondo con una propuesta.
+          </p>
+        </div>
+        <ContactCard />
+      </div>
+    </Section>
+  </div>
+);
 };
 
 export default Home;

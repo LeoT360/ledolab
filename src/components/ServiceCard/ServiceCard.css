@@ -1,0 +1,41 @@
+.service-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 18px;
+  border-radius: 16px;
+  background: var(--card-bg);
+  color: var(--card-fg);
+  transition: transform 0.2s ease;
+}
+.service-card:hover { transform: translateY(-3px); }
+
+.service-card--light { --card-bg: var(--color-bg-light); --card-fg: var(--color-bg-dark); }
+.service-card--dark { --card-bg: var(--color-bg-dark); --card-fg: var(--color-bg-light); }
+.service-card--blue { --card-bg: var(--color-accent); --card-fg: var(--color-bg-light); }
+.service-card--orange { --card-bg: var(--color-primary); --card-fg: var(--color-bg-dark); }
+
+.service-card h3 { margin-bottom: 6px; font-family: var(--font-display); font-size: 1.1rem; line-height: 1.1; }
+.service-card p { font-size: 0.85rem; line-height: 1.5; opacity: 0.75; }
+
+.service-card__footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding-top: 12px;
+  border-top: 1px solid color-mix(in srgb, currentColor 22%, transparent);
+  font-size: 0.8rem;
+}
+.service-card__footer button {
+  display: inline-flex;
+  gap: 6px;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  font-weight: 700;
+}
+.service-card__footer button:hover { text-decoration: underline; }

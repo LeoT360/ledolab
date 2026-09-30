@@ -1,19 +1,62 @@
-# React + Vite
+# Ledo Lab · sitio web
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+React + Vite + React Router.
 
-Currently, two official plugins are available:
+```bash
+npm install
+npm run dev      # desarrollo
+npm run build    # producción (carpeta dist)
+npm run lint
+```
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Dónde editar cada cosa
 
-## React Compiler
+| Qué | Dónde |
+| --- | --- |
+| WhatsApp, mensaje por defecto, activar el portafolio | `src/config/site.js` |
+| Servicios, precios, pasos y preguntas de Edición | `src/data/media.js` |
+| Servicios, precios, pasos y preguntas de Web | `src/data/web.js` |
+| Proyectos del portafolio | `src/data/projects.js` |
+| Colores, tamaños de letra y espacios | `src/styles/variables.css` |
 
-The React Compiler is enabled on this template. See [this documentation](https://react.dev/learn/react-compiler) for more information.
+## Portafolio
 
-Note: This will impact Vite dev & build performances.
-You can also try [the experimental native React Compiler support in plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md#rust-react-compiler) by using `compiler: true` in the plugin options instead of using the Babel plugin.
+La página `/portafolio` está lista pero oculta. Cuando tengas proyectos reales,
+agrégalos en `src/data/projects.js` y cambia `showPortfolio` a `true` en
+`src/config/site.js`. Se activan solos el enlace del menú y el pie de página,
+la ruta y las secciones de trabajos de Edición y Web.
 
-## Expanding the Oxlint configuration
+## Cómo está organizado
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and Oxlint's TypeScript related rules in your project.
+**Cada página es dueña de su hero.** El hero de cada página está escrito directamente en su archivo
+(`pages/<Página>/<Página>.jsx`) y sus estilos en el CSS de esa misma carpeta, con clases propias
+(`.home-hero`, `.media-hero`, `.web-hero`, `.portfolio-hero`). Puedes cambiar colores, tamaños,
+agregar imágenes o figuras en uno sin afectar a los otros.
+
+**Componentes compartidos:** solo lo que debe verse igual en todo el sitio.
+`Section` / `SectionHeading`, `Steps`, `Faq`, `CtaSection`, `ServiceCard`, `ServiceModal`,
+`ProjectCard`, `WorksSection`, `Button`, `ShapeDivider` e `Icon`.
+Si quieres que una sección tenga su propia personalidad, cambia su `<Section>` por un
+`<section className="mi-clase">` y ponle su CSS en la página, igual que los heroes.
+
+**Iconos:** `src/components/Icon/Icon.jsx`. No son imágenes: cada icono es un dibujo SVG escrito
+en ese archivo. Los usan el navbar de escritorio y el de celular.
+
+**Navbar:** `Navbar.jsx` elige entre `DesktopNavbar` y `MobileNavbar` según el ancho (767 px).
+Los enlaces están en `src/config/navigation.js`.
+
+## Publicar en Vercel
+
+1. Sube el proyecto a GitHub.
+2. En vercel.com: **Add New → Project**, elige el repositorio y pulsa **Deploy** (detecta Vite solo).
+3. Cuando tengas la URL definitiva (o tu dominio), ponla en `VITE_SITE_URL`:
+   en `.env` y también en Vercel → *Settings → Environment Variables*. Vuelve a desplegar.
+
+`vercel.json` hace que `/web` y `/edicion` funcionen al abrirlos directamente.
+En cada build se generan `sitemap.xml` y `robots.txt` con esa URL.
+
+## Al compartir el enlace
+
+La imagen que aparece en WhatsApp y redes es `public/og-image.png` (1200×630).
+Los textos están en `index.html`. Las redes guardan una copia: si la cambias y no se actualiza,
+prueba el enlace en el depurador de Facebook (developers.facebook.com/tools/debug).

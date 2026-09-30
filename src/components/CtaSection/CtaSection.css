@@ -1,0 +1,4 @@
+.cta { padding: clamp(56px, 9vh, 84px) 0; text-align: center; }
+.cta__content { display: flex; flex-direction: column; align-items: center; }
+.cta .section-heading { margin-bottom: 14px; }
+.cta__content > p { max-width: 44ch; margin-bottom: 24px; color: var(--muted); line-height: 1.6; }

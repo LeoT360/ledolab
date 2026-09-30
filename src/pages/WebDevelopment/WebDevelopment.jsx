@@ -1,476 +1,94 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import Button from '../../components/Button/Button';
+import CtaSection from '../../components/CtaSection/CtaSection';
+import Faq from '../../components/Faq/Faq';
 import ShapeDivider from '../../components/ShapeDivider/ShapeDivider';
+import { Section, SectionHeading } from '../../components/Section/Section';
+import ServiceCard from '../../components/ServiceCard/ServiceCard';
 import ServiceModal from '../../components/ServiceModal/ServiceModal';
+import Steps from '../../components/Steps/Steps';
+import WorksSection, { hasWorks } from '../../components/WorksSection/WorksSection';
+import { whatsappLink } from '../../config/site';
+import { webFaqs, webServices, webSteps } from '../../data/web';
 import './WebDevelopment.css';
+import { usePageMeta } from '../../hooks/usePageMeta';
 
-const services = [
-  {
-    title: 'Landing Page',
-    price: 'Desde $XX.XXX',
-    description:
-      'Una página enfocada en presentar un producto, servicio o campaña de forma clara y atractiva.',
-    details: {
-      idealFor:
-        'Negocios, productos o campañas que necesitan una presencia web enfocada en un objetivo concreto.',
-      includes: [
-        'Diseño personalizado',
-        'Diseño responsive',
-        'Secciones según el objetivo del proyecto',
-        'Botones y llamados a la acción',
-      ],
-      formats: 'Adaptada para computadores, tablets y celulares.',
-    },
-  },
-  {
-    title: 'Página web para negocio',
-    price: 'Desde $XX.XXX',
-    description:
-      'Una página completa para mostrar quién eres, qué haces y cómo pueden encontrarte.',
-    details: {
-      idealFor:
-        'Negocios que necesitan presentar sus servicios, información y formas de contacto en internet.',
-      includes: [
-        'Diseño personalizado',
-        'Estructura de varias secciones',
-        'Diseño responsive',
-        'Sección de contacto',
-      ],
-      formats: 'Adaptada para computadores, tablets y celulares.',
-    },
-  },
-  {
-    title: 'Portafolio web',
-    price: 'Desde $XX.XXX',
-    description:
-      'Una web diseñada para mostrar tus proyectos, trabajos y experiencia.',
-    details: {
-      idealFor:
-        'Creativos, profesionales, freelancers y marcas que quieren mostrar su trabajo de forma visual.',
-      includes: [
-        'Diseño personalizado',
-        'Galería o presentación de proyectos',
-        'Diseño responsive',
-        'Secciones informativas',
-      ],
-      formats: 'Adaptada para computadores, tablets y celulares.',
-    },
-  },
-  {
-    title: 'Web personalizada',
-    price: 'Desde $XX.XXX',
-    description:
-      'Una experiencia web diseñada alrededor de la identidad y necesidades de tu proyecto.',
-    details: {
-      idealFor:
-        'Proyectos que necesitan una estructura o experiencia diferente a una página web convencional.',
-      includes: [
-        'Diseño personalizado',
-        'Estructura planteada desde cero',
-        'Diseño responsive',
-        'Funcionalidades según el proyecto',
-      ],
-      formats: 'Adaptada a las necesidades del proyecto.',
-    },
-  },
-  {
-    title: 'Interfaz interactiva',
-    price: 'Desde $XX.XXX',
-    description:
-      'Interfaces con movimiento e interacción para hacer que una web destaque.',
-    details: {
-      idealFor:
-        'Marcas y proyectos que quieren una experiencia web más dinámica y visual.',
-      includes: [
-        'Diseño de interfaz',
-        'Elementos interactivos',
-        'Animaciones y transiciones',
-        'Diseño responsive',
-      ],
-      formats: 'Adaptada para computadores y dispositivos móviles.',
-    },
-  },
-  {
-    title: 'Funcionalidad web',
-    price: 'Desde $XX.XXX',
-    description:
-      'Desarrollo de funcionalidades específicas para complementar una página.',
-    details: {
-      idealFor:
-        'Proyectos que necesitan una funcionalidad específica que no está contemplada dentro de una página convencional.',
-      includes: [
-        'Análisis de la necesidad',
-        'Desarrollo de la funcionalidad',
-        'Integración con la página',
-        'Pruebas de funcionamiento',
-      ],
-      formats: 'Según las características de la funcionalidad.',
-    },
-  },
-];
-
-const methodologies = [
-  {
-    number: '01',
-    title: 'Cuéntame tu idea',
-    description:
-      'Hablamos sobre tu negocio, lo que necesitas y qué quieres conseguir con tu página.',
-  },
-  {
-    number: '02',
-    title: 'Definimos la propuesta',
-    description:
-      'Organizamos la estructura, contenido, estilo visual y funcionalidades del proyecto.',
-  },
-  {
-    number: '03',
-    title: 'Construyo la web',
-    description:
-      'Transformo la propuesta en una experiencia web funcional, visual y adaptada a tu proyecto.',
-  },
-  {
-    number: '04',
-    title: 'Revisamos y entregamos',
-    description:
-      'Revisamos el resultado, hacemos los ajustes necesarios y dejamos todo listo.',
-  },
-];
-
-const works = [
-  {
-    number: '01',
-    title: 'Proyecto web',
-    description: 'Diseño y desarrollo web.',
-  },
-  {
-    number: '02',
-    title: 'Proyecto web',
-    description: 'Experiencia digital personalizada.',
-  },
-  {
-    number: '03',
-    title: 'Proyecto web',
-    description: 'Landing page para negocio.',
-  },
-];
-
-const faqs = [
-  {
-    question: '¿Tengo que tener claro cómo quiero mi página?',
-    answer:
-      'No necesariamente. Podemos partir de una idea general y definir juntos la estructura, contenido y estilo que mejor se adapte a tu proyecto.',
-  },
-  {
-    question: '¿Puedo proporcionar mis propios textos e imágenes?',
-    answer:
-      'Sí. Puedes proporcionar los materiales que ya tengas y trabajamos a partir de ellos.',
-  },
-  {
-    question: '¿La página se adapta a celulares?',
-    answer:
-      'Sí. La idea es que la experiencia funcione correctamente tanto en computadores como en dispositivos móviles.',
-  },
-  {
-    question: '¿Puedo solicitar cambios?',
-    answer:
-      'Sí. Los ajustes se realizan durante la etapa de revisión según lo establecido en la propuesta del proyecto.',
-  },
-  {
-    question: '¿Puedo pedir algo que no aparece en los servicios?',
-    answer:
-      'Sí. Si tienes una idea diferente, podemos revisar qué necesitas y definir una propuesta personalizada.',
-  },
-];
+const cardTones = ['dark', 'blue', 'orange'];
 
 const WebDevelopment = () => {
+  usePageMeta(
+    'Páginas web para negocios | Ledo Lab',
+    'Landing pages, sitios para negocios y portafolios web, diseñados y programados para que te encuentren en internet.'
+  );
+
   const [selectedService, setSelectedService] = useState(null);
+  // Sin sección de trabajos, las preguntas cambian de color para no repetir fondos seguidos
+  const showWorks = hasWorks(['web']);
+  const faqTone = showWorks ? 'light' : 'primary';
 
   return (
-    <main className="web-page">
+    <div className="web-page">
+      {/* ===== HERO · Desarrollo web =====
+          Este bloque es solo de esta página: cambia el texto aquí y sus estilos en WebDevelopment.css (.web-hero). */}
       <section className="web-hero">
-        <div className="web-hero-grid" />
-
-        <div className="web-hero-window web-hero-window-one">
-          <span />
-          <span />
-          <span />
-        </div>
-
-        <div className="web-hero-window web-hero-window-two">
-          <span>WEB</span>
-          <span>DEVELOPMENT</span>
-        </div>
-
-        <div className="web-hero-content">
-          <div className="web-hero-copy">
-            <p className="web-hero-kicker">DESARROLLO WEB</p>
-
+        <div className="web-hero__inner content-width">
+          <div className="web-hero__copy">
+            <p className="web-hero__kicker">Desarrollo web</p>
             <h1>
-              TU IDEA,
-              <br />
-              <span>EN INTERNET.</span>
+              Tu negocio, <span>en internet.</span>
             </h1>
-
-            <p className="web-hero-description">
-              Diseño y desarrollo páginas web que convierten la identidad de
-              tu negocio en una experiencia digital.
+            <p className="web-hero__text">
+              Diseño y programo páginas web para que tu negocio se vea profesional y te encuentren fácil.
             </p>
-
-            <Link to="#web-services" className="web-hero-button">
-              VER SERVICIOS <span>↗</span>
-            </Link>
-          </div>
-
-          <div className="web-hero-visual">
-            <div className="web-hero-browser">
-              <div className="web-browser-bar">
-                <div className="web-browser-dots">
-                  <span />
-                  <span />
-                  <span />
-                </div>
-
-                <div className="web-browser-address">
-                  ledolab.dev
-                </div>
-              </div>
-
-              <div className="web-browser-content">
-                <div className="web-browser-line web-browser-line-large" />
-                <div className="web-browser-line" />
-                <div className="web-browser-line web-browser-line-short" />
-
-                <div className="web-browser-blocks">
-                  <div />
-                  <div />
-                  <div />
-                </div>
-
-                <div className="web-browser-button">CLICK</div>
-              </div>
+            <div className="web-hero__actions">
+              <Button href={whatsappLink('Hola, quiero cotizar una página web.')} arrow>
+                Cotizar por WhatsApp
+              </Button>
+              <Button to="#services" variant="outline-light">Ver servicios</Button>
             </div>
-
-            <div className="web-hero-cursor">↖</div>
-            <div className="web-hero-label">CREATIVE / CODE</div>
           </div>
-        </div>
 
-        <ShapeDivider
-          type="curve"
-          fillColor="var(--color-bg-light)"
-        />
+          {/* Zona de decoración: figuras, imágenes o animaciones de este hero */}
+          <div className="web-hero__art" aria-hidden="true"></div>
+        </div>
+        <ShapeDivider type="soft" fillColor="var(--color-bg-light)" />
       </section>
 
-      <section className="web-services" id="services">
-        <div className="web-section-heading">
-          <div>
-            <p className="web-section-kicker">SERVICIOS</p>
-
-            <h2>
-              Una web que
-              <br />
-              <span>se sienta tuya.</span>
-            </h2>
-          </div>
-
-          <p>
-            Desde una landing page hasta una experiencia completamente
-            personalizada. Cada proyecto se construye pensando en lo que
-            realmente necesita tu negocio.
-          </p>
-        </div>
-
-        <div className="web-services-grid">
-          {services.map((service, index) => (
-            <button
-              type="button"
-              className={`web-service-card web-service-card-${index + 1}`}
+      <Section tone="light" id="services" divider={{ type: 'soft', next: 'dark' }}>
+        <SectionHeading title="Una web que" highlight="se sienta tuya." />
+        <div className="web-services">
+          {webServices.map((service, index) => (
+            <ServiceCard
               key={service.title}
-              onClick={() => setSelectedService(service)}
-            >
-              <div className="web-service-card-top">
-                <span>0{index + 1}</span>
-                <span>↗</span>
-              </div>
-
-              <div className="web-service-card-content">
-                <h3>{service.title}</h3>
-
-                <p>{service.description}</p>
-              </div>
-
-              <div className="web-service-card-bottom">
-                <strong>{service.price}</strong>
-                <span>+</span>
-              </div>
-            </button>
+              service={service}
+              tone={cardTones[index % cardTones.length]}
+              onOpen={setSelectedService}
+            />
           ))}
         </div>
+      </Section>
 
-        <ShapeDivider
-          type="soft"
-          fillColor="var(--color-bg-dark)"
-        />
-      </section>
+      <Section tone="dark" id="methodologies" divider={{ type: 'wave', next: showWorks ? 'primary' : faqTone }}>
+        <SectionHeading title="De la idea" highlight="a la web." />
+        <Steps items={webSteps} />
+      </Section>
 
-      <section className="web-methodologies" id='methodologies'>
-        <div className="web-methodologies-heading">
-          <div>
-            <p className="web-section-kicker">METODOLOGÍA</p>
+      <WorksSection categories={['web']} next={faqTone} />
 
-            <h2>
-              De la idea
-              <br />
-              <span>a la web.</span>
-            </h2>
-          </div>
+      <Section tone={faqTone} id="faq" divider={{ type: 'soft', next: 'dark' }}>
+        <Faq items={webFaqs} title="Antes de" highlight="empezar." />
+      </Section>
 
-          <p>
-            Un proceso sencillo para convertir lo que tienes en mente en una
-            experiencia digital real.
-          </p>
-        </div>
+      <CtaSection
+        tone="dark"
+        title="¿Hablamos de"
+        highlight="tu página?"
+        text="Cuéntame tu idea y lo hablamos por WhatsApp."
+        message="Hola, quiero cotizar una página web."
+      />
 
-        <div className="web-methodologies-list">
-          {methodologies.map((methodology) => (
-            <article
-              className="web-methodology-item"
-              key={methodology.number}
-            >
-              <span className="web-methodology-number">
-                {methodology.number}
-              </span>
-
-              <div>
-                <h3>{methodology.title}</h3>
-                <p>{methodology.description}</p>
-              </div>
-
-              <span className="web-methodology-arrow">↗</span>
-            </article>
-          ))}
-        </div>
-
-        <ShapeDivider
-          type="wave"
-          fillColor="var(--color-bg-light)"
-          flip
-        />
-      </section>
-
-      <section className="web-works" id='works'>
-        <div className="web-works-heading">
-          <div>
-            <p className="web-section-kicker">TRABAJOS</p>
-
-            <h2>
-              Ideas que ya
-              <br />
-              <span>están tomando forma.</span>
-            </h2>
-          </div>
-
-          <Link to="/portfolio" className="web-works-link">
-            VER PORTFOLIO ↗
-          </Link>
-        </div>
-
-        <div className="web-works-grid">
-          {works.map((work) => (
-            <Link
-              to="/portfolio"
-              className="web-work-card"
-              key={work.number}
-            >
-              <div className="web-work-placeholder">
-                <span>WEB / 0{work.number}</span>
-
-                <div className="web-work-ui">
-                  <div />
-                  <div />
-                  <div />
-                </div>
-              </div>
-
-              <div className="web-work-info">
-                <div>
-                  <span>{work.number}</span>
-                  <h3>{work.title}</h3>
-                </div>
-
-                <p>{work.description}</p>
-              </div>
-            </Link>
-          ))}
-        </div>
-
-        <ShapeDivider
-          type="arch"
-          fillColor="var(--color-primary)"
-        />
-      </section>
-
-      <section className="web-faq" id='faq'>
-        <div className="web-faq-layout">
-          <div className="web-faq-heading">
-            <p className="web-section-kicker">FAQ</p>
-
-            <h2>
-              Antes de
-              <br />
-              <span>empezar.</span>
-            </h2>
-
-            <p>
-              Algunas preguntas que pueden aparecer antes de comenzar un
-              proyecto web.
-            </p>
-          </div>
-
-          <div className="web-faq-list">
-            {faqs.map((faq, index) => (
-              <details className="web-faq-item" key={faq.question}>
-                <summary>
-                  <span>0{index + 1}</span>
-                  <strong>{faq.question}</strong>
-                  <b>+</b>
-                </summary>
-
-                <p>{faq.answer}</p>
-              </details>
-            ))}
-          </div>
-        </div>
-
-        <ShapeDivider
-          type="double"
-          fillColor="var(--color-bg-dark)"
-        />
-      </section>
-
-      <section className="web-cta">
-        <div className="web-cta-content">
-          <p className="web-section-kicker">¿TIENES UNA IDEA?</p>
-
-          <h2>
-            Hagamos que
-            <br />
-            <span>pase de idea a web.</span>
-          </h2>
-
-          <Link to="/#contact" className="web-cta-button">
-            EMPEZAR UN PROYECTO <span>→</span>
-          </Link>
-        </div>
-      </section>
-
-      {selectedService && (
-        <ServiceModal
-          service={selectedService}
-          onClose={() => setSelectedService(null)}
-        />
-      )}
-    </main>
+      {selectedService && <ServiceModal service={selectedService} onClose={() => setSelectedService(null)} />}
+    </div>
   );
 };
 
